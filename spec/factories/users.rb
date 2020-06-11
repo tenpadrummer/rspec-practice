@@ -2,7 +2,7 @@
 FactoryBot.define do
   # 下記の記述により、テスト内で FactoryBot.create(:user) と書けば
   # 簡単に新しいユーザーを作成できる。
-  # つまり、スペック全体でファクトリが使える
+  # Userモデルのスペックで使用可能
 
   # エイリアス（別名）はownerですとファクトリに伝えておく。
   factory :user, aliases: [:owner] do
