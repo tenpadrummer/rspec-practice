@@ -72,6 +72,16 @@ RSpec.describe User, type: :model do
   end
 
   # ユーザーのフルネームを文字列として返すこと
-  it "returns a user's full name as a string"
+  it "returns a user's full name as a string" do
+    # ユーザーを一人作成
+    user = User.new(
+      first_name: "John",
+      last_name:  "Doe",
+      email:      "johndoe@example.com",
+    )
+
+    # eqは == のこと
+    expect(user.name).to eq "John Doe"
+  end
 
 end
