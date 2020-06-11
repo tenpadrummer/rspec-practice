@@ -13,6 +13,7 @@ class User < ApplicationRecord
   before_save :ensure_authentication_token
   after_create :send_welcome_email
 
+  # ユーザーの姓と名を 毎回連結して新しい文字列を作るより、@user.name を呼び出すだけでフルネームが出力される
   def name
     [first_name, last_name].join(" ")
   end

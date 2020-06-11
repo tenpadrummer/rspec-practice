@@ -6,6 +6,7 @@ class Note < ApplicationRecord
 
   validates :message, presence: true
 
+  # 渡された文字列でメモ(note)を検索する機能を用意してあります。この機能はNoteモデルにスコープとして実装してある
   scope :search, ->(term) {
     where("LOWER(message) LIKE ?", "%#{term.downcase}%")
   }
