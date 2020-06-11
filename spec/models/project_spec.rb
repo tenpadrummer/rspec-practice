@@ -101,4 +101,13 @@ RSpec.describe Project, type: :model do
       expect(project).to_not be_late
     end
   end
+
+  # たくさんのメモが付いていること
+  it "can have many notes" do
+    # FactoryBotを使用しデータを作成
+    # トレイトでセットした:with_notesをコールバックし、テストをパスさせる
+    project = FactoryBot.create(:project, :with_notes)
+    # プロジェクトにあるメモが５個あるか（lengthが == 5か）検証する
+    expect(project.notes.length).to eq 5
+  end
 end

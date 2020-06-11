@@ -17,11 +17,10 @@ require 'rails_helper'
 # Userという名前のモデルのテストをここに書くことを示している。
 
 RSpec.describe User, type: :model do
-  describe User do
-    # factorybotによってuserが生成されて、それが有効か検証する
-    it "has a valid factory" do
-      expect(FactoryBot.build(:user)).to be_valid
-    end
+
+  # factorybotによってuserが生成されて、それが有効か検証する
+  it "has a valid factory" do
+    expect(FactoryBot.build(:user)).to be_valid
   end
 
   # 名がなければ無効な状態であること

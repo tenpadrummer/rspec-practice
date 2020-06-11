@@ -14,9 +14,15 @@ FactoryBot.define do
     # belongs_to :owner, class_name: 'User', foreign_key: :user_idに関わる
     association :owner
 
-    # 以下の３つは、:project ファクトリの内 部で入れ子になっているため、
+    # 以下は:projectファクトリの内部で入れ子になっているため、
     # ユニーク属性つまり変更したいもの以外は継承されている。
-    # 継承を使うと class: Project の指定もなくすことができる。
+    # 継承を使うとclass: Projectの指定もなくすことができる。
+
+    # メモ付きのプロジェクト
+    trait :with_notes do
+      # 新しいプロジェクトを作成した後にメモファクトリを使って5つの新しいメモを追加
+      after(:create) { |project| create_list(:note, 5, project: project) }
+    end
 
     # 昨日が締め切りのプロジェクト
     factory :project_due_yesterday do
