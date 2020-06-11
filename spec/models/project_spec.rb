@@ -78,4 +78,36 @@ RSpec.describe Project, type: :model do
     # 今回の場合、other_projectの状態、つまりnameがnil,重複していないか検証。
     expect(other_project).to be_valid
   end
+
+
+  describe "late status" do
+    # be_lateマッチャは late または late? という名前の属性やメソッドが存在し、それが真偽値を返すようになっていれば使用可能。
+
+    # 締切日が過ぎていれば遅延していること
+    it "is late when the due date is past today" do
+      project = FactoryBot.create(:project_due_yesterday)
+      expect(project).to be_late
+    end
+
+    # 締切日が今日ならスケジュールどおりであること
+    it "is on time when the due date is today" do
+      project = FactoryBot.create(:project_due_today)
+      expect(project).to_not be_late
+    end
+
+    # 締切日が未来ならスケジュールどおりであること
+    it "is on time when the due date is in the future" do
+      project = FactoryBot.create(:project_due_tomorrow)
+      expect(project).to_not be_late
+    end
+  end
+
+  # たくさんのメモが付いていること
+  it "can have many notes" do
+    # FactoryBotを使用しデータを作成
+    # トレイトでセットした:with_notesをコールバックし、テストをパスさせる
+    project = FactoryBot.create(:project, :with_notes)
+    # プロジェクトにあるメモが５個あるか（lengthが == 5か）検証する
+    expect(project.notes.length).to eq 5
+  end
 end
