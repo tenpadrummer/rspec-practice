@@ -3,7 +3,9 @@ FactoryBot.define do
   # 下記の記述により、テスト内で FactoryBot.create(:user) と書けば
   # 簡単に新しいユーザーを作成できる。
   # つまり、スペック全体でファクトリが使える
-  factory :user do
+
+  # エイリアス（別名）はownerですとファクトリに伝えておく。
+  factory :user, aliases: [:owner] do
     first_name "Aaron"
     last_name "Sumner"
     #　シーケンスを使えば、ユニークバリデーションを持つフィールドを扱うことができる。
