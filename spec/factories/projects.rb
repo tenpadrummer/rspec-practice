@@ -38,6 +38,12 @@ FactoryBot.define do
     factory :project_due_tomorrow do
       due_on 1.day.from_now
     end
+
+    #無効になっているproject
+    trait :invalid do
+      # nameはnilとするため無効
+      name nil
+    end
   end
 end
 

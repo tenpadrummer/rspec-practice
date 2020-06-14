@@ -109,22 +109,38 @@ RSpec.describe ProjectsController, type: :controller do
         @user = FactoryBot.create(:user)
       end
 
-      # プロジェクトを追加できること
-      it "add a project" do
-        # attributes_forでファクトリからテスト用の属性値をハッシュとして作成。
-        # buildとの違いは、モデルオブジェクトではなく、ハッシュであるということ
-        # パラメータとして値を渡す場合、ハッシュを使って渡すことが目的で、
-        project_params = FactoryBot.attributes_for(:project)
-        # p project_params
-        sign_in @user
-        # ここで期待していることは、POSTメソッドで渡すparamsにPOSTキー、
-        # そのキーのValueをattributes_forの返り値を渡すどうなるかということ
-        expect {
-          # paramsのprojectに渡されるものは、ハッシュ
-          post :create, params: {project: project_params}
-          # changeマッチャは、状態が変わったことだけを検証
-          # ログイン済みユーザーのプロジェクトが増減したか検証する (by(増減する値の数))
-        }.to change(@user.projects, :count).by(1)
+      # 有効な属性値の場合
+      context "with valid attributes" do
+        # プロジェクトを追加できること
+        it "add a project" do
+          # attributes_forでファクトリからテスト用の属性値をハッシュとして作成。
+          # buildとの違いは、モデルオブジェクトではなく、ハッシュであるということ
+          # パラメータとして値を渡す場合、ハッシュを使って渡すことが目的で、
+          project_params = FactoryBot.attributes_for(:project)
+          # p project_params
+          sign_in @user
+          # ここで期待していることは、POSTメソッドで渡すparamsにPOSTキー、
+          # そのキーのValueをattributes_forの返り値を渡すどうなるかということ
+          expect {
+            # paramsのprojectに渡されるものは、ハッシュ
+            post :create, params: {project: project_params}
+            # changeマッチャは、状態が変わったことだけを検証
+            # ログイン済みユーザーのプロジェクトが増減したか検証する (by(増減する値の数))
+          }.to change(@user.projects, :count).by(1)
+        end
+      end
+
+      #無効な属性値の場合
+      context "with invalid attributes" do
+        # プロジェクトを追加できないこと
+        it "does not add a project" do
+          # ここのattributes_forで渡しているinvalidはprojectのファクトリのトレイトから持ってきている
+          project_params = FactoryBot.attributes_for(:project, :invalid)
+          sign_in @user
+          expect {
+            post :create, params: {project: project_params}
+          }.to_not change(@user.projects, :count)
+        end
       end
     end
 
