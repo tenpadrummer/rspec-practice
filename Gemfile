@@ -18,8 +18,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'capybara'
   gem 'launchy', '~> 2.4.3'
-  gem 'selenium-webdriver'
-  gem 'chromedriver-helper'
+  gem 'poltergeist'
   gem 'rspec-rails', '~> 3.6.0'
   gem "factory_bot_rails", "~> 4.10.0"
 end
