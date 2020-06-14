@@ -44,6 +44,14 @@ RSpec.feature "Projects", type: :feature do
     }.to change(user.projects, :count).by(1)
     # changeマッチャを使ってテスト、つまり「userがオーナーになっているプロジェクトが本当に増えたかどうか」を検証
   end
+
+  # ゲストがプロジェクトを追加する
+  scenario "guest adds a project" do
+    visit projects_path
+    click_link "New Project"
+    # save_and_open_page はデバッグ用のメソッド
+    # save_and_open_pageによって、Railsがブラウザに返したHTMLを見ることが可能
+  end
 end
 
 
