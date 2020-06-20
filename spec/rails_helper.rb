@@ -33,7 +33,7 @@ RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
   # Devise のヘルパーメソッドをテスト内で使用する
   config.include Devise::Test::ControllerHelpers, type: :controller
-
+  config.include Devise::Test::IntegrationHelpers, type: :feature
 
   config.include RequestSpecHelper, type: :request
   # If you're not using ActiveRecord, or you'd prefer not to run each of your

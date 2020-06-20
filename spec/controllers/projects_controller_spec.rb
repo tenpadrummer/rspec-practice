@@ -18,19 +18,14 @@ RSpec.describe ProjectsController, type: :controller do
         # ログイン状態をシミュレートするためにsign_inヘルパー
         sign_in @user
         get :index
-        # be_successマッチャを使用し、予期していることが成功するか検証
-        expect(response).to be_success
-        # indexアクションには認証済みのユーザーでアクセスしていることになる
-      end
-
-      # 200レスポンスを返すこと
-      it "returns a 200 response" do
-        # ログイン状態をシミュレートするために sign_in ヘルパー
-        sign_in @user
-        get :index
-        # have_status_httpマッチャを使用し、どんなレスポンスを返すか検証
-        expect(response).to have_http_status "200"
-        # indexアクションには認証済みのユーザーでアクセスしていることになる
+        # 失敗の集約時に使用するaggregate_failures
+        # expectを続けて実行することができる
+        # 加えて、なぜexpectが失敗したかの原因までわかりやすくなる。
+        # テストが成功すれば、aggregate_failuresは関係ない
+        aggregate_failures do
+          expect(response).to be_success
+          expect(response).to have_http_status "200"
+        end
       end
     end
 
