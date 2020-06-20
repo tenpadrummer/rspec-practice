@@ -34,9 +34,15 @@ RSpec.feature "Projects", type: :feature do
       click_button "Create Project"
     }.to change(user.projects, :count).by(1)
 
-    expect(page).to have_content "Project was successfully created"
-    expect(page).to have_content "Test Project"
-    expect(page).to have_content "Owner: #{user.name}"
+    # 失敗の集約時に使用するaggregate_failures
+    # expectを続けて実行することができる
+    # 加えて、なぜexpectが失敗したかの原因までわかりやすくなる。
+    # テストが成功すれば、aggregate_failuresは関係ない
+    aggregate_failures do
+      expect(page).to have_content "Project was successfully created"
+      expect(page).to have_content "Test Project"
+      expect(page).to have_content "Owner: #{user.name}"
+    end
   end
 end
 
