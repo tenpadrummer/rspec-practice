@@ -12,9 +12,9 @@ RSpec.describe TasksController, type: :controller do
     it "responds with JSON formatted output" do
       sign_in user
       # ここでのリクエストにJSON形式を指定
-      get :show, format: :json, params: { project_id: project.id, id: task.id }
-      # application/jsonのContent-Typeでレスポンスを返すか検証
-      expect(response.content_type).to eq "application/json"
+      get :show, format: :json,
+        params: { project_id: project.id, id: task.id }
+      expect(response).to have_content_type :json
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe TasksController, type: :controller do
       # showと異なる点は、new_taskを生成し、それをキーtaskのvalueがtaskのidではなく、new_taskということで、taskのパラメータも一緒に送信
       post :create, format: :json, params: { project_id: project.id, task: new_task }
       # application/jsonのContent-Typeでレスポンスを返すか検証
-      expect(response.content_type).to eq "application/json"
+      expect(response).to have_content_type :json
     end
 
     # 新しいタスクをプロジェクトに追加すること
