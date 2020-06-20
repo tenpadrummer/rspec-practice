@@ -11,46 +11,32 @@ require 'rails_helper'
 # MiniTest, RSpec, Cucumberといった複数のテストフレームワークから利用できる
 
 RSpec.feature "Projects", type: :feature do
-  # featureもdescribeと同様にスペックを構造化していく
 
-  # ユーザーは新しいプロジェクトを作成するというシュミレート
-  # 今回の例はhome#index、sessions#new、projects#index、projects#new、projects#createを動かしている
+  # login_support.rbのメソッドsign_in_as(user)を呼び出す
+  include LoginSupport
 
   # scenarioはitと同様にexampleの起点となる
   scenario "user creates a new project" do
     # 最初に新しいテストユーザーを作成
     user = FactoryBot.create(:user)
+    # rails_helper.rbのconfig.include Devise::Test::IntegrationHelpers, type: :featureを呼び出す
+    sign_in user
 
-    # トップページにアクセス
     visit root_path
-    # ログイン 画面からそのユーザーでログイン
-    click_link "Sign in"
-    fill_in "Email", with: user.email
-    fill_in "Password", with: user.password
-    # フォームをフィルインしたらログインボタンをクリック
-    click_button "Log in"
 
-    # アプリケーションの利用者が使うものと同じフォームを使って新しいプロジェクトを作成できるか期待
-    # この中でブラウザ上でテストしたいステップを記述、それから結果の表示が期待どおりになっていることを検証
-    expect{
+    # login_support.rbのメソッドsign_in_as(user)を呼び出す
+    # sign_in_as user
+
+    expect {
       click_link "New Project"
       fill_in "Name", with: "Test Project"
       fill_in "Description", with: "Trying out Capybara"
       click_button "Create Project"
-
-      expect(page).to have_content "Project was successfully created"
-      expect(page).to have_content "Test Project"
-      expect(page).to have_content "Owner: #{user.name}"
     }.to change(user.projects, :count).by(1)
-    # changeマッチャを使ってテスト、つまり「userがオーナーになっているプロジェクトが本当に増えたかどうか」を検証
-  end
 
-  # ゲストがプロジェクトを追加する
-  scenario "guest adds a project" do
-    visit projects_path
-    click_link "New Project"
-    # save_and_open_page はデバッグ用のメソッド
-    # save_and_open_pageによって、Railsがブラウザに返したHTMLを見ることが可能
+    expect(page).to have_content "Project was successfully created"
+    expect(page).to have_content "Test Project"
+    expect(page).to have_content "Owner: #{user.name}"
   end
 end
 
