@@ -63,10 +63,13 @@ class ProjectsController < ApplicationController
   end
 
   def complete
-    @project.update_attributes!(completed: true)
-    redirect_to @project,notice: "Congratulations, this project is complete!"
+    if @project.update_attributes(completed: true)
+      redirect_to @project,
+        notice: "Congratulations, this project is complete!"
+    else
+      redirect_to @project, alert: "Unable to complete project."
+    end
   end
-
 
   private
     # Use callbacks to share common setup or constraints between actions.
