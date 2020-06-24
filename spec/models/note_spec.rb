@@ -1,20 +1,12 @@
 # この記述はテストにおいてほぼすべてのファイルで必要
 require 'rails_helper'
 
-# toは「～であること」を期待
-# not_to / to_notは「～でないこと」を期待
+# モック(mock)は本物のオブジェクトのふりをするオブジェクト
+# モックはこれまでファクトリなどを使って作成したオブジェクトの代役となる
 
-# マッチャについて(matcher)
-# マッチャ（matcher）は「期待値と実際の値を比較して、一致した（もしくは一致しなかった）という結果を返すオブジェクト]
-# be_validマッチャは、期待値は有効かどうか検証
-# eqマッチャは、期待値と実際の値が「等しい」かどうかを検証
-# includeマッチャは、「～が含まれていること」を検証。ハッシュや文字列に対しても使用可能。
-# be_xxx (predicateマッチャ)は、述語のように使用可能
-# be_emptyマッチャの場合、期待値が空かどうかを検証
+# スタブ(stub)はオブジェクトのメソッドをオーバーライドし、事前に決められた値を返す。すなわち、呼び出されるとテスト用に本物の結果を返すダミーメソッド。
+# スタブをよく使うのは,メソッドのデフォルト機能をオーバーライドするケース.
 
-# 期待する結果をまとめて記述(describe)。
-# example(itで始まる1行)一つにつき、結果を一つだけ期待している。
-# Noteという名前のモデルのテストをここに書くことを示している。
 RSpec.describe Note, type: :model do
 
   let(:user) { FactoryBot.create(:user) }
@@ -100,6 +92,23 @@ RSpec.describe Note, type: :model do
         expect(Note.count).to eq 3
       end
     end
+  end
+
+  # FactoryBotにもスタブオブジェクトを作るメソッドが用意されている
+  # 以下のコードでモックのユーザーオブジェクト、テスト対象のメモに設定したスタブメソッドを使用
+
+  it "delegates name to the user who created it" do
+    # ユーザーオブジェクトをテストダブルに置き換え。すなわち、本物のユーザーではない。
+    # Doubleという名のクラスになっており、nameにしかreturnできない。
+    user = double("user", name: "Fake User")
+    note = Note.new
+    # スタブはallowを使って作成。この行はテストに対して、このテスト内のどこかでnote.userを呼び出すことを伝えている。
+    # user.nameが呼ばれると、note.user_idの値を使ってデータベース上の該当するユーザーを検索、見つかったユーザーを返却する代わりに、userという名前のテストダブルを返す。
+    allow(note).to receive(:user).and_return(user)
+    expect(note.user_name).to eq "Fake User"
+    # 以下のコードがあると失敗する。#<Double "user"> received unexpected message :first_name with (no args)
+    #　理由はモックで作られたdoubleはnameのみに対応できるため
+    # expect(note.user.first_name).to eq "Fake"
   end
 end
 
