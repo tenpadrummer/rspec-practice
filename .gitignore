@@ -26,3 +26,7 @@
 /public/system
 
 .ruby-version
+
+# Paperclip によってアップロードされたファイルを無視する
+/public/system
+/spec/test_uploads

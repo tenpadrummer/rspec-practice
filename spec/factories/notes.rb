@@ -8,7 +8,10 @@ FactoryBot.define do
     message "My important note."
     association :project
     user { project.owner }
+
+    # トレイトを使用し、ファイルが最初から添付されたnoteを作成
+    trait :with_attachment do
+      attachment { File.new("#{Rails.root}/spec/files/attachment.jpg") }
+    end
   end
 end
-
-
