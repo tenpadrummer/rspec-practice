@@ -327,5 +327,45 @@ RSpec.describe ProjectsController, type: :controller do
         expect { delete :destroy, params: { id: @project.id }}.to_not change(Project, :count)
       end
     end
+
+    describe "#complete" do
+      # 認証済みのユーザーとして
+      context "as an authenticated user" do
+        let!(:project) { FactoryBot.create(:project, completed: nil) }
+
+        before do
+          sign_in project.owner
+        end
+
+        # 成功しないプロジェクトの完了
+        describe "an unsuccessful completion" do
+          before do
+            allow_any_instance_of(Project).
+              to receive(:update_attributes).
+              with(completed: true).
+              and_return(false)
+          end
+
+          # プロジェクト画面にリダイレクトすること
+          it "redirects to the project page" do
+            patch :complete, params: { id: project.id }
+            expect(response).to redirect_to project_path(project)
+          end
+
+          # フラッシュを設定すること
+          it "sets the flash" do
+            patch :complete, params: { id: project.id }
+            expect(flash[:alert]).to eq "Unable to complete project."
+          end
+
+          # プロジェクトを完了済みにしないこと
+          it "doesn't mark the project as completed" do
+            expect {
+              patch :complete, params: { id: project.id }
+            }.to_not change(project, :completed)
+          end
+        end
+      end
+    end
   end
 end
