@@ -100,7 +100,8 @@ RSpec.describe Note, type: :model do
   it "delegates name to the user who created it" do
     # ユーザーオブジェクトをテストダブルに置き換え。すなわち、本物のユーザーではない。
     # Doubleという名のクラスになっており、nameにしかreturnできない。
-    user = double("user", name: "Fake User")
+    # 検証機能付きのテストダブル(verified double)、Userのインスタンスと同じようにふるまうもの
+    user = instance_double("User", name: "Fake User")
     note = Note.new
     # スタブはallowを使って作成。この行はテストに対して、このテスト内のどこかでnote.userを呼び出すことを伝えている。
     # user.nameが呼ばれると、note.user_idの値を使ってデータベース上の該当するユーザーを検索、見つかったユーザーを返却する代わりに、userという名前のテストダブルを返す。
